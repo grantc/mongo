@@ -1,5 +1,5 @@
 Name: mongo
-Version: 2.0.0-rc2
+Version: 2.0.1
 Release: mongodb_1%{?dist}
 Summary: mongo client shell and tools
 License: AGPL 3.0
@@ -49,7 +49,8 @@ scons --prefix=$RPM_BUILD_ROOT/usr all
 # XXX really should have shared library here
 
 %install
-scons --prefix=$RPM_BUILD_ROOT/usr install
+scons --prefix=$RPM_BUILD_ROOT/usr --full install
+# Add --full to get the header files
 mkdir -p $RPM_BUILD_ROOT/usr/share/man/man1
 cp debian/*.1 $RPM_BUILD_ROOT/usr/share/man/man1/
 mkdir -p $RPM_BUILD_ROOT/etc/rc.d/init.d
@@ -117,7 +118,7 @@ fi
 %{_mandir}/man1/mongosniff.1*
 %{_mandir}/man1/mongostat.1*
 %{_mandir}/man1/mongorestore.1*
-%{_mandir}/man1/bsondum.1*
+%{_mandir}/man1/bsondump.1*
 
 %files server
 %defattr(-,root,root,-)
@@ -133,7 +134,14 @@ fi
 %attr(0755,mongod,mongod) %dir /var/log/mongo
 %attr(0640,mongod,mongod) %config(noreplace) %verify(not md5 size mtime) /var/log/mongo/mongod.log
 
+%files devel
+%defattr(-,root,root,-)
+%{_includedir}/mongo/*
+%{_libdir}/libmongoclient.a
+
 %changelog
+* Mon Nov 07 2011 Grant Croker <grant.croker@gmail.com>
+- Reinstate the devel pacakge
 * Thu Jan 28 2010 Richard M Kreuter <richard@10gen.com>
 - Minor fixes.
 
